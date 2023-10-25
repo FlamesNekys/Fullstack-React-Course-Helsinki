@@ -1,0 +1,22 @@
+sequenceDiagram
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+activate Server
+Server ->> Browser: HTML document
+deactivate Server
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+activate Server
+Server ->> Browser: CSS file
+deactivate Server
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+activate Server
+Server ->> Browser: JS file
+deactivate Server
+Note right of Browser: In this JS file also described the logic of submitting the form
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+activate Server
+Server ->> Browser: [notes]
+deactivate Server
