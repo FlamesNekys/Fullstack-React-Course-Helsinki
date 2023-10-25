@@ -1,0 +1,30 @@
+sequenceDiagram
+
+Note right of Browser: After clicking the button browser sends user's input body to the server
+Browser ->> Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+activate Server
+Note left of Server: Server adds new note to [notes]
+Server ->> Browser: Redirect https://studies.cs.helsinki.fi/exampleapp/notes
+deactivate Server
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+activate Server
+Server ->> Browser: HTML document
+deactivate Server
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+activate Server
+Server ->> Browser: CSS file
+deactivate Server
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+activate Server
+Server ->> Browser: JS file
+deactivate Server
+Note right of Browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+activate Server
+Server ->> Browser: [notes]
+deactivate Server
+Note right of Browser: The browser executes the callback function that renders the [notes]
