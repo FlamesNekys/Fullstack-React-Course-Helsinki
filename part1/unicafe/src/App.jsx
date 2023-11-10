@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Button from "./components/Button";
-import Statistic from "./components/StatisticLine";
 import Statistics from "./components/Statistics";
 
 const App = () => {
