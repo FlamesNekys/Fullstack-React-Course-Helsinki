@@ -1,6 +1,7 @@
 import React from "react";
+import Person from "./Person";
 
-const Persons = ({ persons, newFilter }) => {
+const Persons = ({ persons, newFilter, handleDeleteClick }) => {
 	return (
 		<div>
 			{persons
@@ -8,9 +9,11 @@ const Persons = ({ persons, newFilter }) => {
 					person.name.toLowerCase().includes(newFilter.toLowerCase())
 				)
 				.map((person) => (
-					<p key={person.id} style={{ fontSize: 18 }}>
-						{person.name} {person.number}
-					</p>
+					<Person
+						key={person.id}
+						person={person}
+						handleDeleteClick={() => handleDeleteClick(person.id)}
+					/>
 				))}
 		</div>
 	);
