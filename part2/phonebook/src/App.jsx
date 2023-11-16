@@ -4,17 +4,23 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import "axios";
 import { useEffect } from "react";
-import axios from "axios";
 import personService from "./services/persons";
+import InfoBlock from "./components/InfoBlock";
+import ErrorMessage from "./components/ErrorMessage";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [newFilter, setNewFilter] = useState("");
+	const [infoBlock, setInfoBlock] = useState(null);
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	useEffect(() => {
-		personService.getAll().then((persons) => setPersons(persons));
+		personService
+			.getAll()
+			.then((persons) => setPersons(persons))
+			.catch((e) => console.log(e.message));
 	}, []);
 
 	const addPerson = (e) => {
@@ -22,9 +28,9 @@ const App = () => {
 		const existingPerson = persons.find(
 			(person) => person.name === newName
 		);
-		if (existingPerson.number === newNumber) {
+		if (existingPerson && existingPerson.number === newNumber) {
 			alert(`${newName} is already in the phonebook`);
-		} else if (existingPerson.number !== newNumber) {
+		} else if (existingPerson && existingPerson.number !== newNumber) {
 			if (
 				window.confirm(
 					`${newName} is already in the phonebook, replace the old number with a new one?`
@@ -35,24 +41,46 @@ const App = () => {
 						...existingPerson,
 						number: newNumber,
 					})
-					.then((updatedPerson) =>
+					.then((updatedPerson) => {
 						setPersons(
 							persons.map((person) =>
 								person.name !== newName ? person : updatedPerson
 							)
-						)
-					);
+						);
+						setInfoBlock(
+							`The number of ${newName} is successfully changed`
+						);
+						setTimeout(() => setInfoBlock(null), 5000);
+						setNewName("");
+						setNewNumber("");
+					})
+					.catch((e) => {
+						setErrorMessage(
+							`${newName} was already deleted from the server`
+						);
+						setTimeout(() => setErrorMessage(null), 5000);
+						setPersons(
+							persons.filter((person) => person.name !== newName)
+						);
+						setNewName("");
+						setNewNumber("");
+					});
 			}
 		} else {
 			const newPerson = {
 				name: newName,
 				number: newNumber,
 			};
-			personService.create(newPerson).then((person) => {
-				setPersons(persons.concat(person));
-				setNewName("");
-				setNewNumber("");
-			});
+			personService
+				.create(newPerson)
+				.then((person) => {
+					setPersons(persons.concat(person));
+					setInfoBlock(`${newName} is successfully added`);
+					setTimeout(() => setInfoBlock(null), 5000);
+					setNewName("");
+					setNewNumber("");
+				})
+				.catch((e) => console.log(e.message));
 		}
 	};
 
@@ -60,21 +88,23 @@ const App = () => {
 	const handleNumberChange = (e) => setNewNumber(e.target.value);
 	const handleFilter = (e) => setNewFilter(e.target.value);
 	const handleDeleteClick = (id) => {
-		if (
-			window.confirm(
-				`Do you want to delete ${
-					persons.find((person) => person.id === id).name
-				}?`
-			)
-		)
+		const deleted = persons.find((person) => person.id === id).name;
+		if (window.confirm(`Do you want to delete ${deleted}?`))
 			personService
 				.remove(id)
-				.then(setPersons(persons.filter((person) => person.id !== id)));
+				.then(() => {
+					setPersons(persons.filter((person) => person.id !== id));
+					setInfoBlock(`${deleted} is successfully deleted`);
+					setTimeout(() => setInfoBlock(null), 5000);
+				})
+				.catch((e) => console.log(e.message));
 	};
 
 	return (
 		<div>
 			<h1>Phonebook</h1>
+			<InfoBlock infoBlock={infoBlock} />
+			<ErrorMessage errorMessage={errorMessage} />
 			<Filter newFilter={newFilter} handleFilter={handleFilter} />
 
 			<h2>Add a new</h2>
