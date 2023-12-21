@@ -51,17 +51,24 @@ const App = () => {
 							`The number of ${newName} is successfully changed`
 						);
 						setTimeout(() => setInfoBlock(null), 5000);
-						setNewName("");
-						setNewNumber("");
 					})
 					.catch((e) => {
-						setErrorMessage(
-							`${newName} was already deleted from the server`
-						);
-						setTimeout(() => setErrorMessage(null), 5000);
-						setPersons(
-							persons.filter((person) => person.name !== newName)
-						);
+						if (e.response.data.error.includes("Validation")) {
+							setErrorMessage(e.response.data.error);
+							setTimeout(() => setErrorMessage(null), 5000);
+						} else {
+							setErrorMessage(
+								`${newName} was already deleted from the server`
+							);
+							setTimeout(() => setErrorMessage(null), 5000);
+							setPersons(
+								persons.filter(
+									(person) => person.name !== newName
+								)
+							);
+						}
+					})
+					.finally(() => {
 						setNewName("");
 						setNewNumber("");
 					});
@@ -77,10 +84,15 @@ const App = () => {
 					setPersons(persons.concat(person));
 					setInfoBlock(`${newName} is successfully added`);
 					setTimeout(() => setInfoBlock(null), 5000);
+				})
+				.catch((e) => {
+					setErrorMessage(e.response.data.error);
+					setTimeout(() => setErrorMessage(null), 5000);
+				})
+				.finally(() => {
 					setNewName("");
 					setNewNumber("");
-				})
-				.catch((e) => console.log(e.message));
+				});
 		}
 	};
 
