@@ -1,73 +1,56 @@
-import React from 'react'
-import Blog from './Blog'
-import Notification from './Notification'
-import Error from './Error'
+import { useState } from 'react'
 
-const BlogForm = ({
-    notification,
-    errorMessage,
-    user,
-    setUser,
-    handleNewBlog,
-    title,
-    setTitle,
-    author,
-    setAuthor,
-    url,
-    setUrl,
-    blogs,
-}) => {
+const BlogForm = ({ createBlog }) => {
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const handleNewBlog = async (event) => {
+        event.preventDefault()
+
+        const blog = {
+            title,
+            url,
+            author,
+        }
+
+        createBlog(blog)
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
+
     return (
-        <div>
-            <h2>Blogs</h2>
-            <Notification message={notification} />
-            <Error message={errorMessage} />
+        <form onSubmit={handleNewBlog}>
             <div>
-                <h4>{`${user.name} logged in`}</h4>{' '}
-                <button
-                    onClick={() => {
-                        window.localStorage.removeItem('loggedUser')
-                        setUser(null)
-                    }}
-                >
-                    Log out
-                </button>
+                title
+                <input
+                    type="text"
+                    value={title}
+                    name="Title"
+                    onChange={({ target }) => setTitle(target.value)}
+                />
             </div>
-            <h2>Create new blog</h2>
-            <form onSubmit={handleNewBlog}>
-                <div>
-                    title
-                    <input
-                        type="text"
-                        value={title}
-                        name="Title"
-                        onChange={({ target }) => setTitle(target.value)}
-                    />
-                </div>
-                <div>
-                    author
-                    <input
-                        type="text"
-                        value={author}
-                        name="Author"
-                        onChange={({ target }) => setAuthor(target.value)}
-                    />
-                </div>
-                <div>
-                    url
-                    <input
-                        type="text"
-                        value={url}
-                        name="Url"
-                        onChange={({ target }) => setUrl(target.value)}
-                    />
-                </div>
-                <button type="submit">Create</button>
-            </form>
-            {blogs.map((blog) => (
-                <Blog key={blog.id} blog={blog} />
-            ))}
-        </div>
+            <div>
+                author
+                <input
+                    type="text"
+                    value={author}
+                    name="Author"
+                    onChange={({ target }) => setAuthor(target.value)}
+                />
+            </div>
+            <div>
+                url
+                <input
+                    type="text"
+                    value={url}
+                    name="Url"
+                    onChange={({ target }) => setUrl(target.value)}
+                />
+            </div>
+            <button type="submit">Create</button>
+        </form>
     )
 }
 

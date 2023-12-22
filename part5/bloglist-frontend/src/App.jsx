@@ -6,14 +6,12 @@ import Notification from './components/Notification'
 import Error from './components/Error'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [url, setUrl] = useState('')
     const [errorMessage, setErrorMessage] = useState(null)
     const [notification, setNotification] = useState(null)
     const [user, setUser] = useState(null)
@@ -65,22 +63,15 @@ const App = () => {
         }
     }
 
-    const handleNewBlog = async (event) => {
-        event.preventDefault()
-
+    const createBlog = async (blog) => {
         try {
-            const blog = {
-                title,
-                url,
-                author,
-            }
-
             const createdBlog = await blogService.create(blog)
+            createdBlog.user = user
             setBlogs(blogs.concat(createdBlog))
-            setTitle('')
-            setAuthor('')
-            setUrl('')
-            setNotification(`A new blog ${createdBlog.title} by ${createdBlog.author} added`)
+            setNotification(`a new blog ${createdBlog.title} by ${createdBlog.author} added`)
+            setTimeout(() => {
+                setNotification(null)
+            }, 5000)
         } catch (error) {
             setErrorMessage(error.response.data.error)
             setTimeout(() => {
@@ -91,32 +82,44 @@ const App = () => {
 
     if (!user) {
         return (
-            <LoginForm
-                errorMessage={errorMessage}
-                handleLogin={handleLogin}
-                username={username}
-                password={password}
-                setUsername={setUsername}
-                setPassword={setPassword}
-            />
+            <div>
+                <h2>Log in to application</h2>
+                <Error message={errorMessage} />
+                <LoginForm
+                    errorMessage={errorMessage}
+                    handleLogin={handleLogin}
+                    username={username}
+                    password={password}
+                    setUsername={setUsername}
+                    setPassword={setPassword}
+                />
+            </div>
         )
     }
 
     return (
-        <BlogForm
-            author={author}
-            blogs={blogs}
-            errorMessage={errorMessage}
-            handleNewBlog={handleNewBlog}
-            notification={notification}
-            setAuthor={setAuthor}
-            setTitle={setTitle}
-            setUrl={setUrl}
-            setUser={setUser}
-            title={title}
-            url={url}
-            user={user}
-        />
+        <div>
+            <h2>Blogs</h2>
+            <Notification message={notification} />
+            <Error message={errorMessage} />
+            <div>
+                <h4>{`${user.name} logged in`}</h4>{' '}
+                <button
+                    onClick={() => {
+                        window.localStorage.removeItem('loggedUser')
+                        setUser(null)
+                    }}
+                >
+                    Log out
+                </button>
+            </div>
+            <Togglable buttonLabel="new blog">
+                <BlogForm createBlog={createBlog} />
+            </Togglable>
+            {blogs.map((blog) => (
+                <Blog key={blog.id} blog={blog} />
+            ))}
+        </div>
     )
 }
 
