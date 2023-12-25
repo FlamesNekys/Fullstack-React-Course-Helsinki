@@ -80,6 +80,45 @@ const App = () => {
         }
     }
 
+    const handleLike = async (blog) => {
+        const newBlog = {
+            title: blog.title,
+            url: blog.url,
+            author: blog.author,
+            likes: blog.likes + 1,
+        }
+
+        try {
+            const updatedBlog = await blogService.update(blog.id, newBlog)
+            updatedBlog.user = blog.user
+            const updatedBlogs = blogs.map((b) => (b.id === blog.id ? updatedBlog : b))
+            setBlogs(updatedBlogs)
+        } catch (error) {
+            setErrorMessage(error.message)
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+        }
+    }
+
+    const handleRemove = async (blog) => {
+        if (window.confirm(`Do you really want to delete ${blog.title} by ${blog.author}?`)) {
+            try {
+                await blogService.remove(blog.id)
+                setBlogs(blogs.filter((b) => b.id !== blog.id))
+                setNotification(`Blog ${blog.title} by ${blog.author} successfully deleted`)
+                setTimeout(() => {
+                    setNotification(null)
+                }, 5000)
+            } catch (error) {
+                setErrorMessage(error.message)
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000)
+            }
+        }
+    }
+
     if (!user) {
         return (
             <div>
@@ -116,9 +155,17 @@ const App = () => {
             <Togglable buttonLabel="new blog">
                 <BlogForm createBlog={createBlog} />
             </Togglable>
-            {blogs.map((blog) => (
-                <Blog key={blog.id} blog={blog} />
-            ))}
+            {blogs
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog) => (
+                    <Blog
+                        key={blog.id}
+                        blog={blog}
+                        handleLike={handleLike}
+                        username={user.username}
+                        removeBlog={handleRemove}
+                    />
+                ))}
         </div>
     )
 }
