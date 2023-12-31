@@ -13,6 +13,7 @@ const Error = ({ message }) => {
                 alignItems: 'center',
                 marginBottom: 15,
             }}
+            id="error"
         >
             {message}
         </div>
