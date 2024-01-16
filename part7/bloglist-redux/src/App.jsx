@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -16,7 +15,6 @@ const App = () => {
     const [password, setPassword] = useState('')
 
     const blogs = useSelector(({ blogs }) => blogs)
-    const notification = useSelector(({ notification }) => notification)
     const user = useSelector(({ user }) => user)
 
     const dispatch = useDispatch()
@@ -105,7 +103,7 @@ const App = () => {
         return (
             <div>
                 <h2>Log in to application</h2>
-                <Notification notification={notification} />
+                <Notification />
                 <LoginForm
                     handleLogin={handleLogin}
                     username={username}
@@ -120,7 +118,7 @@ const App = () => {
     return (
         <div>
             <h2>Blogs</h2>
-            <Notification notification={notification} />
+            <Notification />
             <div>
                 <h4>{`${user.name} logged in`}</h4>{' '}
                 <button
