@@ -6,7 +6,7 @@ const BlogForm = ({ createBlog }) => {
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
-    const handleNewBlog = async (event) => {
+    const handleNewBlog = (event) => {
         event.preventDefault()
 
         const blog = {
