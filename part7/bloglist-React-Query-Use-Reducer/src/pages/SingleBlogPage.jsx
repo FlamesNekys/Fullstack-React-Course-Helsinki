@@ -122,7 +122,7 @@ const SingleBlogPage = () => {
 
     useEffect(() => {
         if (!blogs) navigate('/')
-    }, [])
+    })
 
     if (!blogs || !comments) return null
 
@@ -131,34 +131,43 @@ const SingleBlogPage = () => {
     if (isLoading) return null
 
     return (
-        <div>
-            <h2>
+        <div className="mx-3">
+            <h2 className="text-2xl">
                 {blogToDisplay.title} by {blogToDisplay.author}
             </h2>
-            <a href={blogToDisplay.url}>{blogToDisplay.url}</a>
+            <a className="hover:underline" href={blogToDisplay.url}>
+                {blogToDisplay.url}
+            </a>
             <p>
                 {blogToDisplay.likes}{' '}
-                <button onClick={() => handleLike(blogToDisplay)}>like</button>
+                <button className="ml-1" onClick={() => handleLike(blogToDisplay)}>
+                    like
+                </button>
             </p>
             <p>added by {blogToDisplay.user.name}</p>
             {user.username === blogToDisplay.user.username ? (
                 <button onClick={() => handleRemove(blogToDisplay)}>remove</button>
             ) : null}
-            <h3>comments</h3>
+            <h3 className="mt-4 mb-2 text-2xl">Comments</h3>
             <form onSubmit={handleSubmit}>
                 <input
+                    placeholder="comment"
                     type="text"
                     onChange={({ target }) => setContent(target.value)}
                     value={content}
                     name="Content"
                 />
-                <button type="submit">create</button>
+                <button className="ml-2" type="submit">
+                    add
+                </button>
             </form>
-            {comments
-                .filter((comment) => comment.blogId === blogToDisplay.id)
-                .map((comment) => (
-                    <li key={comment.id}>{comment.content}</li>
-                ))}
+            <div className="mt-3">
+                {comments
+                    .filter((comment) => comment.blogId === blogToDisplay.id)
+                    .map((comment) => (
+                        <li key={comment.id}>{comment.content}</li>
+                    ))}
+            </div>
         </div>
     )
 }

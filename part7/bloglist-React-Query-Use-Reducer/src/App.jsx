@@ -23,26 +23,28 @@ const App = () => {
     }, [])
 
     return (
-        <BrowserRouter>
-            <Navbar />
-            <Notification />
-            <Routes>
-                <Route
-                    path="/"
-                    element={user.username ? <BlogsPage /> : <Navigate replace to="/login" />}
-                />
-                <Route
-                    path="/login"
-                    element={!user.username ? <LoginPage /> : <Navigate replace to="/" />}
-                />
-                <Route
-                    path="/users"
-                    element={user.username ? <UsersPage /> : <Navigate replace to="/login" />}
-                />
-                <Route path="/users/:id" element={<SingleUserPage />} />
-                <Route path="/blogs/:id" element={<SingleBlogPage />} />
-            </Routes>
-        </BrowserRouter>
+        <div className="bg-gradient-to-r text-cyan-50 from-indigo-950 to-purple-950 min-h-screen">
+            <BrowserRouter>
+                <Navbar />
+                <Notification />
+                <Routes className="bg-gradient-to-b from-indigo-800 to-violet-900">
+                    <Route
+                        path="/"
+                        element={user.username ? <BlogsPage /> : <Navigate replace to="/login" />}
+                    />
+                    <Route
+                        path="/login"
+                        element={!user.username ? <LoginPage /> : <Navigate replace to="/" />}
+                    />
+                    <Route
+                        path="/users"
+                        element={user.username ? <UsersPage /> : <Navigate replace to="/login" />}
+                    />
+                    <Route path="/users/:id" element={<SingleUserPage />} />
+                    <Route path="/blogs/:id" element={<SingleBlogPage />} />
+                </Routes>
+            </BrowserRouter>
+        </div>
     )
 }
 

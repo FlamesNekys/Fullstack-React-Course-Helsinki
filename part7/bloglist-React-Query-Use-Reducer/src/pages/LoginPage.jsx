@@ -50,7 +50,7 @@ const LoginPage = () => {
 
     return (
         <div>
-            <h2>Log in to application</h2>
+            <h2 className="text-center text-4xl">Log in to application</h2>
             <LoginForm
                 handleLogin={handleLogin}
                 username={username}

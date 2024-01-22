@@ -18,12 +18,14 @@ const SingleUserPage = () => {
     const userToDisplay = users.find((user) => user.id === id)
 
     return (
-        <div>
-            <h2>{userToDisplay.name}</h2>
-            <h3>Added blogs</h3>
-            {userToDisplay.blogs.map((blog) => (
-                <li key={blog.id}>{blog.title}</li>
-            ))}
+        <div className="mx-4">
+            <h2 className="text-3xl mb-3">{userToDisplay.name}</h2>
+            <div>
+                <h3 className="text-2xl">Added blogs:</h3>
+                {userToDisplay.blogs.map((blog) => (
+                    <li key={blog.id}>{blog.title}</li>
+                ))}
+            </div>
         </div>
     )
 }

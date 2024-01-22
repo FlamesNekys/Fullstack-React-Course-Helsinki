@@ -23,37 +23,42 @@ const BlogForm = ({ createBlog }) => {
 
     return (
         <form onSubmit={handleNewBlog}>
-            <div>
-                title
-                <input
-                    type="text"
-                    value={title}
-                    id="title-form"
-                    name="Title"
-                    onChange={({ target }) => setTitle(target.value)}
-                />
+            <div className="space-y-4">
+                <div>
+                    <input
+                        placeholder="title"
+                        type="text"
+                        value={title}
+                        id="title-form"
+                        name="Title"
+                        onChange={({ target }) => setTitle(target.value)}
+                    />
+                </div>
+                <div>
+                    <input
+                        placeholder="author"
+                        type="text"
+                        value={author}
+                        id="author-form"
+                        name="Author"
+                        onChange={({ target }) => setAuthor(target.value)}
+                    />
+                </div>
+                <div>
+                    <input
+                        placeholder="url"
+                        type="text"
+                        value={url}
+                        id="url-form"
+                        name="Url"
+                        onChange={({ target }) => setUrl(target.value)}
+                    />
+                </div>
             </div>
-            <div>
-                author
-                <input
-                    type="text"
-                    value={author}
-                    id="author-form"
-                    name="Author"
-                    onChange={({ target }) => setAuthor(target.value)}
-                />
-            </div>
-            <div>
-                url
-                <input
-                    type="text"
-                    value={url}
-                    id="url-form"
-                    name="Url"
-                    onChange={({ target }) => setUrl(target.value)}
-                />
-            </div>
-            <button type="submit">Create</button>
+
+            <button className="hover:underline mt-5" type="submit">
+                create
+            </button>
         </form>
     )
 }

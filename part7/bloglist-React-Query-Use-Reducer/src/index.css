@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input {
+    @apply w-auto rounded-md border-0 pl-2 bg-indigo-900 text-cyan-50 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6;
+}
+
+button {
+    @apply shadow-xl px-2 py-1 rounded-md border hover:bg-indigo-800 border-indigo-200 hover:underline hover:transition hover:scale-105 hover:-translate-y-1 delay-75 duration-200;
+}
+
+th,
+td {
+    @apply border border-indigo-400 p-1.5;
+}

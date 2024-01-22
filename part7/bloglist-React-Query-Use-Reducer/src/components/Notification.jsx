@@ -28,7 +28,12 @@ const Notification = () => {
         marginBottom: 15,
     }
 
-    if (notification.message) return <div style={messageStyle}>{notification.message}</div>
+    if (notification.message)
+        return (
+            <div className="bg-violet-800 px-3 py-2 border-2 border-indigo-500 w-screen shadow-xl animate-appear animate-disappear">
+                {notification.message}
+            </div>
+        )
     if (notification.error) return <div style={errorStyle}>{notification.error}</div>
 }
 

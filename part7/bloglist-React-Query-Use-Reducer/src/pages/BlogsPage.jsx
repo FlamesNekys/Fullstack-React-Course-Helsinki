@@ -51,32 +51,29 @@ const BlogsPage = () => {
         }
     }
 
-    const blogStyle = {
-        paddingTop: 10,
-        paddingLeft: 2,
-        border: '1px solid black',
-        marginBottom: 5,
-    }
-
     if (isLoading) {
         return <div>loading data...</div>
     }
 
     return (
-        <div>
-            <h2>Blogs</h2>
+        <div className="mx-3 space-y-2 mt-2 ">
+            <h2 className="text-4xl text-center">Blogs</h2>
             <Togglable buttonLabel="new blog">
                 <BlogForm createBlog={createBlog} />
             </Togglable>
-            {blogs
-                .sort((a, b) => b.likes - a.likes)
-                .map((blog) => (
-                    <div style={blogStyle} key={blog.id}>
-                        <Link to={`blogs/${blog.id}`}>
+            <div className="pt-8 flex flex-wrap justify-center ">
+                {blogs
+                    .sort((a, b) => b.likes - a.likes)
+                    .map((blog) => (
+                        <Link
+                            key={blog.id}
+                            className="shadow-2xl my-2 border rounded-md border-indigo-200  p-1 hover:bg-indigo-900 text-center w-2/3 hover:transition hover:scale-105 hover:-translate-y-1 delay-75 duration-200"
+                            to={`blogs/${blog.id}`}
+                        >
                             {blog.title} {blog.author}
                         </Link>
-                    </div>
-                ))}
+                    ))}
+            </div>
         </div>
     )
 }
