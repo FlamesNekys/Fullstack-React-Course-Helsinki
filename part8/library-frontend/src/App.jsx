@@ -4,8 +4,10 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Recommend from './components/Recommend'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED } from './components/queries'
+import updateCache from './components/updateCache'
 
 const App = () => {
     const [page, setPage] = useState('authors')
@@ -17,6 +19,18 @@ const App = () => {
         const token = localStorage.getItem('library-user-token')
         if (token) setToken(token)
     }, [])
+
+    useSubscription(BOOK_ADDED, {
+        onData: ({ data, client }) => {
+            const addedBook = data.data.bookAdded
+            notify(`${addedBook.title} added`)
+
+            updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+            client.refetchQueries({
+                include: [ALL_AUTHORS],
+            })
+        },
+    })
 
     const notify = (message) => {
         setErrorMessage(message)

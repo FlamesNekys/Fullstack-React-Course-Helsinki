@@ -3,6 +3,9 @@ const Book = require('./models/book')
 const User = require('./models/user')
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('graphql-subscriptions')
+
+const pubsub = new PubSub()
 
 const resolvers = {
     Query: {
@@ -20,14 +23,11 @@ const resolvers = {
 
             return Book.find({ author: args.author, genres: [args.genre] }).populate('author')
         },
-        allAuthors: async () => Author.find({}),
+        allAuthors: async () => {
+            return Author.find({})
+        },
         me: (root, args, context) => {
             return context.currentUser
-        },
-    },
-    Author: {
-        bookCount: async (root) => {
-            return Book.countDocuments({ author: root._id })
         },
     },
     Mutation: {
@@ -57,22 +57,29 @@ const resolvers = {
                 }
 
                 book.author = nonExistedAuthor
+
+                pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
                 return book
             }
+            existingAuthor.bookCount = existingAuthor.bookCount + 1
             const book = new Book({ ...args, author: existingAuthor._id })
             try {
+                await existingAuthor.save()
                 await book.save()
             } catch (error) {
                 throw new GraphQLError('Saving book failed', {
                     extensions: {
                         code: 'BAD_USER_INPUT',
-                        invalidArgs: args.title,
                         error,
                     },
                 })
             }
 
             book.author = existingAuthor
+
+            pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
             return book
         },
         editAuthor: async (root, args, context) => {
@@ -122,6 +129,11 @@ const resolvers = {
             }
 
             return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+        },
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
         },
     },
 }

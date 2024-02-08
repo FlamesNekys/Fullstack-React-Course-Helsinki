@@ -23,6 +23,10 @@ const typeDefs = `
     type Token {
         value: String!
     }
+
+    type Subscription {
+        bookAdded: Book!
+    }
       
 
     type Query {

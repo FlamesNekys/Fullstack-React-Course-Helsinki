@@ -4,9 +4,9 @@ import { GENRE_BOOKS, ME } from './queries'
 
 const Recommend = ({ show }) => {
     const { data, loading } = useQuery(ME)
-    const genre = data ? data.me.favoriteGenre : null
+    const genre = data && data.me ? data.me.favoriteGenre : null
     const result = useQuery(GENRE_BOOKS, {
-        variables: { genre },
+        variables: { genre: genre },
     })
 
     if (!show) {
