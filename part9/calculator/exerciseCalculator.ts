@@ -8,6 +8,27 @@ interface IResult {
     average: number
 }
 
+interface Params {
+    target: number
+    dayHours: number[]
+}
+
+const parseParameters = (args: string[]): Params => {
+    if (args.length < 4) throw new Error('Not enough arguments')
+    args = args.slice(2)
+
+    const dayHours: number[] = []
+    let target: number
+
+    args.forEach((v, id) => {
+        if (!isNaN(Number(v))) {
+            id === 0 ? (target = +v) : dayHours.push(+v)
+        } else throw new Error('Provided values were not numbers!')
+    })
+
+    return { target, dayHours }
+}
+
 const calculateExercise = (dayHours: number[], target: number): IResult => {
     const periodLength = dayHours.length
     const trainingDays = dayHours.filter((h) => h !== 0).length
@@ -31,5 +52,13 @@ const calculateExercise = (dayHours: number[], target: number): IResult => {
         average,
     }
 }
-
-console.log(calculateExercise([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+    const { target, dayHours } = parseParameters(process.argv)
+    console.log(calculateExercise(dayHours, target))
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+        errorMessage += ' Error: ' + error.message
+    }
+    console.log(errorMessage)
+}
