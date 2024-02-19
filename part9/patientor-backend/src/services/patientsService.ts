@@ -27,8 +27,13 @@ const addPatient = (patient: TNewPatient): IPatient => {
     return newPatient;
 };
 
+const getUniquePatient = (id: string): IPatient | undefined => {
+    return patients.find((p) => p.id === id);
+};
+
 export default {
     getPatients,
     getNonSensitivePatients,
     addPatient,
+    getUniquePatient,
 };

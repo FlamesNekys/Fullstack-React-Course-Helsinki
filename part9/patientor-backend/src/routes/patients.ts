@@ -8,6 +8,14 @@ router.get('/', (_req, res) => {
     res.send(patientsService.getNonSensitivePatients());
 });
 
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    const patient = patientsService.getUniquePatient(id);
+
+    if (patient) res.json(patient);
+    else res.status(404).send("Error 404: Can't find patient with proper id");
+});
+
 router.post('/', (req, res) => {
     try {
         const newPatient = toNewPatient(req.body);

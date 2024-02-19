@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NewDiary } from '../types/types';
 
 interface IProps {
-    addDiary(diary: NewDiary): Promise<void>;
+    addDiary: (diary: NewDiary) => Promise<void>;
 }
 
 const DiaryForm = (props: IProps) => {
