@@ -18,6 +18,8 @@ interface IBaseEntry {
     diagnosisCodes?: Array<IDiagnosis['code']>;
 }
 
+export type TBaseEntryWithoutId = Omit<IBaseEntry, 'id'>;
+
 export enum EHealthCheckRating {
     'Healthy' = 0,
     'LowRisk' = 1,
@@ -42,6 +44,10 @@ interface IOccupationalHealthcare extends IBaseEntry {
 }
 
 export type TEntry = IHealthCheckEntry | IHospitalEntry | IOccupationalHealthcare;
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
+export type TEntryWithoutId = UnionOmit<TEntry, 'id'>;
 
 export interface IPatient {
     id: string;

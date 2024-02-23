@@ -7,3 +7,7 @@ export const getAll = async () => {
 
     return data;
 };
+
+export default {
+    getAll,
+};

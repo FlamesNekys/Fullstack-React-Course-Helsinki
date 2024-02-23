@@ -10,7 +10,7 @@ export enum Gender {
     Other = 'other',
 }
 
-interface IBaseEntry {
+export interface IBaseEntry {
     id: string;
     description: string;
     date: string;
@@ -43,6 +43,10 @@ interface IOccupationalHealthcare extends IBaseEntry {
 
 export type TEntry = IHealthCheckEntry | IHospitalEntry | IOccupationalHealthcare;
 
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
+export type TEntryWithoutId = UnionOmit<TEntry, 'id'>;
+
 export interface Patient {
     id: string;
     name: string;
@@ -54,3 +58,12 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, 'id' | 'entries'>;
+
+export interface IAddEntry {
+    addEntry: (entry: TEntryWithoutId) => Promise<void>;
+    diagnoses: Array<Diagnosis['code']>;
+}
+
+export interface IAddEntryForm extends IAddEntry {
+    setShow: React.Dispatch<React.SetStateAction<string | null>>;
+}

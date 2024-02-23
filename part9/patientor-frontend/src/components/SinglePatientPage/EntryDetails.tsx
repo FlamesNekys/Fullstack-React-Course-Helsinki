@@ -20,7 +20,7 @@ const EntryDetails: React.FC<{ entry: TEntry }> = ({ entry }) => {
                 <div>
                     <p>employer: {entry.employerName}</p>
                     <p>
-                        sick start: {entry.sickLeave?.startDate} end: {entry.sickLeave?.endDate}
+                        sick leave start: {entry.sickLeave?.startDate} end: {entry.sickLeave?.endDate}
                     </p>
                 </div>
             );
