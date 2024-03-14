@@ -11,9 +11,9 @@ describe('<BlogForm/>', () => {
 
         const { container } = render(<BlogForm createBlog={createBlog} />)
 
-        const title = container.querySelector('#title')
-        const author = container.querySelector('#author')
-        const url = container.querySelector('#url')
+        const title = container.querySelector('#title-form')
+        const author = container.querySelector('#author-form')
+        const url = container.querySelector('#url-form')
         const sendButton = screen.getByText('Create')
 
         await user.type(title, 'test title')
